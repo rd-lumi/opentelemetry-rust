@@ -9,7 +9,7 @@ use core::fmt;
 use std::collections::{HashMap, HashSet};
 use std::mem::take;
 use std::ops::{Add, AddAssign, DerefMut, Sub};
-use std::sync::atomic::{AtomicBool, AtomicI64, AtomicU64, AtomicUsize, Ordering};
+use std::sync::atomic::Ordering;
 use std::sync::{Arc, RwLock};
 
 use aggregate::is_under_cardinality_limit;
@@ -17,6 +17,7 @@ pub(crate) use aggregate::{AggregateBuilder, ComputeAggregation, Measure};
 pub(crate) use exponential_histogram::{EXPO_MAX_SCALE, EXPO_MIN_SCALE};
 use once_cell::sync::Lazy;
 use opentelemetry::{otel_warn, KeyValue};
+use portable_atomic::{AtomicBool, AtomicI64, AtomicU64, AtomicUsize};
 
 use crate::metrics::AttributeSet;
 
@@ -410,8 +411,8 @@ mod tests {
     #[test]
     fn can_add_and_get_u64_atomic_value() {
         let atomic = u64::new_atomic_tracker(0);
-        atomic.add(15);
-        atomic.add(10);
+        atomic.add(15, Ordering::Relaxed);
+        atomic.add(10, Ordering::Relaxed);
 
         let value = atomic.get_value();
         assert_eq!(value, 25);
@@ -420,7 +421,7 @@ mod tests {
     #[test]
     fn can_reset_u64_atomic_value() {
         let atomic = u64::new_atomic_tracker(0);
-        atomic.add(15);
+        atomic.add(15, Ordering::Relaxed);
 
         let value = atomic.get_and_reset_value();
         let value2 = atomic.get_value();
@@ -449,8 +450,8 @@ mod tests {
     #[test]
     fn can_add_and_get_i64_atomic_value() {
         let atomic = i64::new_atomic_tracker(0);
-        atomic.add(15);
-        atomic.add(-10);
+        atomic.add(15, Ordering::Relaxed);
+        atomic.add(-10, Ordering::Relaxed);
 
         let value = atomic.get_value();
         assert_eq!(value, 5);
@@ -459,7 +460,7 @@ mod tests {
     #[test]
     fn can_reset_i64_atomic_value() {
         let atomic = i64::new_atomic_tracker(0);
-        atomic.add(15);
+        atomic.add(15, Ordering::Relaxed);
 
         let value = atomic.get_and_reset_value();
         let value2 = atomic.get_value();
