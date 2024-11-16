@@ -411,8 +411,8 @@ mod tests {
     #[test]
     fn can_add_and_get_u64_atomic_value() {
         let atomic = u64::new_atomic_tracker(0);
-        atomic.add(15, Ordering::Relaxed);
-        atomic.add(10, Ordering::Relaxed);
+        atomic.add(15);
+        atomic.add(10);
 
         let value = atomic.get_value();
         assert_eq!(value, 25);
@@ -421,7 +421,7 @@ mod tests {
     #[test]
     fn can_reset_u64_atomic_value() {
         let atomic = u64::new_atomic_tracker(0);
-        atomic.add(15, Ordering::Relaxed);
+        atomic.add(15);
 
         let value = atomic.get_and_reset_value();
         let value2 = atomic.get_value();
@@ -450,8 +450,8 @@ mod tests {
     #[test]
     fn can_add_and_get_i64_atomic_value() {
         let atomic = i64::new_atomic_tracker(0);
-        atomic.add(15, Ordering::Relaxed);
-        atomic.add(-10, Ordering::Relaxed);
+        atomic.add(15);
+        atomic.add(-10);
 
         let value = atomic.get_value();
         assert_eq!(value, 5);
@@ -460,7 +460,7 @@ mod tests {
     #[test]
     fn can_reset_i64_atomic_value() {
         let atomic = i64::new_atomic_tracker(0);
-        atomic.add(15, Ordering::Relaxed);
+        atomic.add(15);
 
         let value = atomic.get_and_reset_value();
         let value2 = atomic.get_value();
